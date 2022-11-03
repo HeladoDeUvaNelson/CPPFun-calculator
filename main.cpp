@@ -76,7 +76,6 @@ int main()
 
                 switch (oper){
                     case 1:
-//                        cout << "sum!" << endl;
                         if (result == 0){
                             char c = '-';
                             size_t found = numA.find(c);
@@ -92,7 +91,6 @@ int main()
                         break;
 
                     case 2:
-//                        cout << "rest!" << endl;
                         if (result == 0 && numOfIterations == 0){
                             char c = '-';
                             size_t found = numA.find(c);
@@ -107,9 +105,31 @@ int main()
                         break;
 
                     case 3:
+                        if (result == 0 && numOfIterations == 0){
+                            char c = '-';
+                            size_t found = numA.find(c);
+                            if (found != string::npos){
+                                result = stoi(numA) * stoi(numB);
+                            }else {
+                                result = stoi(numA) * stoi(numB);
+                            }
+                        }else {
+                            result = result - stoi(numB);
+                        }
                         break;
 
                     case 4:
+                        if (result == 0 && numOfIterations == 0){
+                            char c = '-';
+                            size_t found = numA.find(c);
+                            if (found != string::npos){
+                                result = stoi(numA) / stoi(numB);
+                            }else {
+                                result = stoi(numA) / stoi(numB);
+                            }
+                        }else {
+                            result = result / stoi(numB);
+                        }
                         break;
                 }
 
