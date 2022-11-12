@@ -213,8 +213,9 @@ int main()
 
                 if (oper == 3 || oper == 4){
                         while (operPosition == 0){
-                            if (exprOrdered[i] == '*' || exprOrdered[i] == '/'){
+                            if (exprOrdered[i] == '*' && i != lastIteration || exprOrdered[i] == '/' && i != lastIteration){
                                 operPosition = i;
+                                lastIteration = i;
                                 i = 1;
                             }else {  
                                 i++;
@@ -225,8 +226,13 @@ int main()
                             if (numbersFilled == 0){
                                 if (operPosition-i > -1 && exprOrdered[operPosition-i] != '+' && exprOrdered[operPosition-i] != '-' && exprOrdered[operPosition-i] != '*' && exprOrdered[operPosition-i] != '/'){
                                     numAUnOrdered += exprOrdered[operPosition-i];
-                                }else if (operPosition-i == 0 && exprOrdered[operPosition-i] == '+' || operPosition-i == 0 && exprOrdered[operPosition-i] == '-') {
+                                }else if (exprOrdered[operPosition-i] == '+' || exprOrdered[operPosition-i] == '-') {
                                     numAUnOrdered += exprOrdered[operPosition-i];
+                                    numbersFilled++;
+                                    i = 1;
+                                    for (int j = 1; j <= numAUnOrdered.length(); j++){
+                                        numA += numAUnOrdered[numAUnOrdered.length()-j];
+                                    }
                                 }else {
                                     numbersFilled++;
                                     i = 1;
@@ -256,32 +262,36 @@ int main()
 
                 switch (oper){
                     case 1:
-                        if (result == 0){
-                            char c = '-';
-                            size_t found = numA.find(c);
-                            if (found != string::npos){
-                                result = stoi(numA) + stoi(numB);
+                        if (numB.length() > 0){
+                            if (result == 0){
+                                char c = '-';
+                                size_t found = numA.find(c);
+                                if (found != string::npos){
+                                    result = stoi(numA) + stoi(numB);
+                                }else {
+                                    result = stoi(numA) + stoi(numB);
+                                }
                             }else {
-                                result = stoi(numA) + stoi(numB);
+                                cout << result << + " result\n";
+                                result = result + stoi(numB);
                             }
-                        }else {
-                            cout << result << + " result\n";
-                            result = result + stoi(numB);
                         }
 
                         break;
 
                     case 2:
-                        if (result == 0 && numOfIterations == 0){
-                            char c = '-';
-                            size_t found = numA.find(c);
-                            if (found != string::npos){
-                                result = stoi(numA) - stoi(numB);
+                        if (numB.length() > 0){
+                            if (result == 0 && numOfIterations == 0){
+                                char c = '-';
+                                size_t found = numA.find(c);
+                                if (found != string::npos){
+                                    result = stoi(numA) - stoi(numB);
+                                }else {
+                                    result = stoi(numA) - stoi(numB);
+                                }
                             }else {
-                                result = stoi(numA) - stoi(numB);
+                                result = result - stoi(numB);
                             }
-                        }else {
-                            result = result - stoi(numB);
                         }
                         break;
 
