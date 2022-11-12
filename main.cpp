@@ -202,37 +202,53 @@ int main()
 
             for (auto oper: operators){
 
+                string numAUnOrdered;
                 string numA;
                 string numB;
-
                 int numbersFilled = 0;
+                int i = 0;
+                int operPosition = 0;
 
-                for (int i = 0; i < exprOrdered.length(); i++){
-                    if (result == 0 && numOfIterations == 0){
-                        if (numbersFilled == 0){
-                            if (exprOrdered[i] != '+' && exprOrdered[i] != '-' && exprOrdered[i] != '*' && exprOrdered[i] != '/'){
-                                numA += exprOrdered[i];
-                            }else if (i == 0 && exprOrdered[i] == '+' || i == 0 && exprOrdered[i] == '-') {
-                                numA += exprOrdered[i];
-                            }else {
-                                numbersFilled++;
-                            }
-                    }else if (numbersFilled == 1){
-                            if (exprOrdered[i] != '+' && exprOrdered[i] != '-' && exprOrdered[i] != '*' && exprOrdered[i] != '/'){
-                                numB += exprOrdered[i];
-                            }else {
-                                numbersFilled++;
-                                lastIteration = i+1;
+                stopWhile = true;
+
+                if (oper == 3 || oper == 4){
+                        while (operPosition == 0){
+                            if (exprOrdered[i] == '*' || exprOrdered[i] == '/'){
+                                operPosition = i;
+                                i = 1;
+                            }else {  
+                                i++;
                             }
                         }
-                    }else if (numbersFilled == 0 && i >= lastIteration){
-                        if (exprOrdered[i] != '+' && exprOrdered[i] != '-' && exprOrdered[i] != '*' && exprOrdered[i] != '/'){
-                            numB += exprOrdered[i];
-                        }else {
-                            numbersFilled++;
-                            lastIteration = i+1;
+
+                        while (stopWhile){
+                            if (numbersFilled == 0){
+                                if (operPosition-i > -1 && exprOrdered[operPosition-i] != '+' && exprOrdered[operPosition-i] != '-' && exprOrdered[operPosition-i] != '*' && exprOrdered[operPosition-i] != '/'){
+                                    numAUnOrdered += exprOrdered[operPosition-i];
+                                }else if (operPosition-i == 0 && exprOrdered[operPosition-i] == '+' || operPosition-i == 0 && exprOrdered[operPosition-i] == '-') {
+                                    numAUnOrdered += exprOrdered[operPosition-i];
+                                }else {
+                                    numbersFilled++;
+                                    i = 1;
+                                    for (int j = 1; j <= numAUnOrdered.length(); j++){
+                                        numA += numAUnOrdered[numAUnOrdered.length()-j];
+                                    }
+                                }
+                                
+                                if (numbersFilled == 0){
+                                    i++;
+                                }
+                            }else if (numbersFilled == 1){
+                                if (operPosition+i <= exprOrdered.length() && exprOrdered[operPosition+i] != '+' && exprOrdered[operPosition+i] != '-' && exprOrdered[operPosition+i] != '*' && exprOrdered[operPosition+i] != '/'){
+                                    numB += exprOrdered[operPosition+i];
+                                }else {
+                                    numbersFilled++;
+                                    /* lastIteration = operPosition; */
+                                    stopWhile = false;
+                                }
+                                i++;
+                            }
                         }
-                    }
                 }
 
                 cout << numA + " A\n";
@@ -284,16 +300,15 @@ int main()
                         break;
 
                     case 4:
-                        if (result == 0 && numOfIterations == 0){
-                            char c = '-';
-                            size_t found = numA.find(c);
-                            if (found != string::npos){
-                                result = stoi(numA) / stoi(numB);
-                            }else {
-                                result = stoi(numA) / stoi(numB);
-                            }
+                        int tempResult = 0;
+                        char c = '-';
+                        size_t found = numA.find(c);
+                        if (found != string::npos){
+                            tempResult = stoi(numA) / stoi(numB);
+                            result += tempResult;
                         }else {
-                            result = result / stoi(numB);
+                            tempResult = stoi(numA) / stoi(numB);
+                            result += tempResult;
                         }
                         break;
                 }
