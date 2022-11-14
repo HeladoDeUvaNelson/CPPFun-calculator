@@ -221,6 +221,8 @@ int main()
                 }
             }
 
+            tempValue = -3;
+
             cout << exprOrdered << + " exprOD\n";
 
             for (auto oper: operators){
@@ -259,9 +261,9 @@ int main()
 
                         while (stopWhile){
                             if (numbersFilled == 0){
-                                if (operPosition-i > -1 && exprOrdered[operPosition-i] != '+' && exprOrdered[operPosition-i] != '-' && exprOrdered[operPosition-i] != '*' && exprOrdered[operPosition-i] != '/'){
+                                if (operPosition-i != tempValue && operPosition-i > -1 && exprOrdered[operPosition-i] != '+' && exprOrdered[operPosition-i] != '-' && exprOrdered[operPosition-i] != '*' && exprOrdered[operPosition-i] != '/'){
                                     numAUnOrdered += exprOrdered[operPosition-i];
-                                }else if (exprOrdered[operPosition-i] == '+' || exprOrdered[operPosition-i] == '-') {
+                                }else if (operPosition-i != tempValue && exprOrdered[operPosition-i] == '+' || operPosition-i != tempValue && exprOrdered[operPosition-i] == '-') {
                                     numAUnOrdered += exprOrdered[operPosition-i];
                                     numbersFilled++;
                                     i = 1;
@@ -282,6 +284,7 @@ int main()
                             }else if (numbersFilled == 1){
                                 if (operPosition+i <= exprOrdered.length() && exprOrdered[operPosition+i] != '+' && exprOrdered[operPosition+i] != '-' && exprOrdered[operPosition+i] != '*' && exprOrdered[operPosition+i] != '/'){
                                     numB += exprOrdered[operPosition+i];
+                                    tempValue = operPosition+i;
                                 }else {
                                     numbersFilled++;
                                     lastIteration = operPosition;
