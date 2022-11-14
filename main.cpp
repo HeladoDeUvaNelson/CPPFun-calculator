@@ -89,17 +89,20 @@ int main()
                     string unOrderNums;
                     string tempValueLessI;
                     string tempValuePlusI;
-                    operators.push_back(1);
+                    bool exprInside = false;
+                    
                     int j = 1;
                     while (stopWhile && i-j != -1 && i-j != tempValue && expression[i-j] != '*' && expression[i-j] != '/'){
                         if (expression[i-j] == '+' || expression[i-j] == '-'){
                             tempValueLessI += expression[i-j];
                             unOrderNums += tempValueLessI;
                             stopWhile = false;
+                            exprInside = true;
                         }else {
                             tempValueLessI += expression[i-j];
                             if (i-j == 0){
                                 unOrderNums += tempValueLessI;
+                                exprInside = true;
                                 if (expression[i-j] != '-'){
                                     unOrderNums += '+';
                                 }
@@ -121,32 +124,43 @@ int main()
                         if (expression[i+j] == '+' || expression[i+j] == '-'){
                             if (exprOrdered[exprOrdered.length()-1] != '+' && exprOrdered[exprOrdered.length()-1] != '-'){
                                 exprOrdered += expression[i];
+                                exprInside = true;
                             }else {
                                 exprOrdered[exprOrdered.length()-1] = expression[i];
+                                exprInside = true;
                             }
                             exprOrdered += tempValuePlusI;
                             stopWhile = false;
+                            exprInside = true;
                         }else {
                             tempValuePlusI += expression[i+j];
                             if (expression.length() == i+j+1){
                                 if (exprOrdered[exprOrdered.length()-1] != '+' && exprOrdered[exprOrdered.length()-1] != '-'){
                                     exprOrdered += expression[i];
+                                    exprInside = true;
                                 }else {
                                     exprOrdered[exprOrdered.length()-1] = expression[i];
+                                    exprInside = true;
                                 }
                                 exprOrdered += tempValuePlusI;
                                 stopWhile = false;
+                                exprInside = true;
                             }
                         }
                         tempValue = i+j;
                         j++;
                     }
 
+                    if (unOrderNums.length() > 0 || exprInside){
+                        operators.push_back(1);
+                    }
+
                 }else if (expression[i] == '-' && i != 0){
                     string unOrderNums;
                     string tempValueLessI;
                     string tempValuePlusI;
-                    operators.push_back(2);
+                    bool exprInside = false;
+                    
                     int j = 1;
                     while (stopWhile && i-j != -1 && i-j != tempValue && expression[i-j] != '*' && expression[i-j] != '/'){
                         if (expression[i-j] == '+' || expression[i-j] == '-'){
@@ -175,18 +189,23 @@ int main()
                         if (expression[i+j] == '+' || expression[i+j] == '-'){
                             if (exprOrdered[exprOrdered.length()-1] != '+' && exprOrdered[exprOrdered.length()-1] != '-'){
                                 exprOrdered += expression[i];
+                                exprInside = true;
                             }else {
                                 exprOrdered[exprOrdered.length()-1] = expression[i];
+                                exprInside = true;
                             }
                             exprOrdered += tempValuePlusI;
                             stopWhile = false;
+                            exprInside = true;
                         }else {
                             tempValuePlusI += expression[i+j];
                             if (expression.length() == i+j+1){
                                 if (exprOrdered[exprOrdered.length()-1] != '+' && exprOrdered[exprOrdered.length()-1] != '-'){
                                 exprOrdered += expression[i];
+                                exprInside = true;
                                 }else {
                                     exprOrdered[exprOrdered.length()-1] = expression[i];
+                                    exprInside = true;
                                 }
                                 exprOrdered += tempValuePlusI;
                                 stopWhile = false;
@@ -194,6 +213,10 @@ int main()
                         }
                         tempValue = i+j;
                         j++;
+                    }
+
+                    if (unOrderNums.length() > 0 || exprInside){
+                        operators.push_back(2);
                     }
                 }
             }
@@ -213,7 +236,7 @@ int main()
 
                 if (oper == 3 || oper == 4){
                         while (operPosition == 0){
-                            if (exprOrdered[i] == '*' && i != lastIteration || exprOrdered[i] == '/' && i != lastIteration){
+                            if (exprOrdered[i] == '*' && i != lastIteration && i > lastIteration || exprOrdered[i] == '/' && i != lastIteration && i > lastIteration){
                                 operPosition = i;
                                 lastIteration = i;
                                 i = 1;
@@ -221,6 +244,18 @@ int main()
                                 i++;
                             }
                         }
+                        
+                }else if (oper == 1 || oper == 2){
+                    while (operPosition == 0){
+                            if (exprOrdered[i] == '+' && i != lastIteration && i > lastIteration || exprOrdered[i] == '-' && i != lastIteration && i > lastIteration){
+                                operPosition = i;
+                                lastIteration = i;
+                                i = 1;
+                            }else {  
+                                i++;
+                            }
+                        }
+                }
 
                         while (stopWhile){
                             if (numbersFilled == 0){
@@ -249,13 +284,12 @@ int main()
                                     numB += exprOrdered[operPosition+i];
                                 }else {
                                     numbersFilled++;
-                                    /* lastIteration = operPosition; */
+                                    lastIteration = operPosition;
                                     stopWhile = false;
                                 }
                                 i++;
                             }
                         }
-                }
 
                 cout << numA + " A\n";
                 cout << numB + " B\n";
@@ -264,13 +298,7 @@ int main()
                     case 1:
                         if (numB.length() > 0){
                             if (result == 0){
-                                char c = '-';
-                                size_t found = numA.find(c);
-                                if (found != string::npos){
-                                    result = stoi(numA) + stoi(numB);
-                                }else {
-                                    result = stoi(numA) + stoi(numB);
-                                }
+                                result = stoi(numA) + stoi(numB);
                             }else {
                                 cout << result << + " result\n";
                                 result = result + stoi(numB);
@@ -282,13 +310,7 @@ int main()
                     case 2:
                         if (numB.length() > 0){
                             if (result == 0 && numOfIterations == 0){
-                                char c = '-';
-                                size_t found = numA.find(c);
-                                if (found != string::npos){
-                                    result = stoi(numA) - stoi(numB);
-                                }else {
-                                    result = stoi(numA) - stoi(numB);
-                                }
+                                result = stoi(numA) - stoi(numB);
                             }else {
                                 result = result - stoi(numB);
                             }
@@ -296,27 +318,18 @@ int main()
                         break;
 
                     case 3:
-                        if (result == 0 && numOfIterations == 0){
-                            char c = '-';
-                            size_t found = numA.find(c);
-                            if (found != string::npos){
-                                result = stoi(numA) * stoi(numB);
-                            }else {
-                                result = stoi(numA) * stoi(numB);
-                            }
+                        if (numA.length() > 0){
+                            int tempResult = 0;
+                                tempResult = stoi(numA) * stoi(numB);
+                                result += tempResult;
                         }else {
-                            result = result - stoi(numB);
+                            result = result * stoi(numB);
                         }
                         break;
 
                     case 4:
-                        int tempResult = 0;
-                        char c = '-';
-                        size_t found = numA.find(c);
-                        if (found != string::npos){
-                            tempResult = stoi(numA) / stoi(numB);
-                            result += tempResult;
-                        }else {
+                        if (numA.length() > 0){
+                            int tempResult = 0;
                             tempResult = stoi(numA) / stoi(numB);
                             result += tempResult;
                         }
