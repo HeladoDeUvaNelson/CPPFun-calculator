@@ -20,12 +20,15 @@ int main()
         getline(cin, expression);
 
         int result = 0;
+        double resultDouble = 0;
         int valuesGot = 0;
         int lastIteration = 0;
         int numOfIterations = 0;
         int tempValue = -3;
         bool stopWhile = true;
+        bool resDoubleUsed = false;
         result = 0;
+        resultDouble = 0;
 
         if (expression != "exit" && expression != "quit"){
             for (int i = 0; i < expression.length(); i++){
@@ -263,10 +266,16 @@ int main()
                             if (numbersFilled == 0){
                                 if (operPosition-i != tempValue && operPosition-i > -1 && exprOrdered[operPosition-i] != '+' && exprOrdered[operPosition-i] != '-' && exprOrdered[operPosition-i] != '*' && exprOrdered[operPosition-i] != '/'){
                                     numAUnOrdered += exprOrdered[operPosition-i];
+                                    if (exprOrdered[operPosition-i] == '.'){
+                                        resDoubleUsed = true;
+                                    }
                                 }else if (operPosition-i != tempValue && exprOrdered[operPosition-i] == '+' || operPosition-i != tempValue && exprOrdered[operPosition-i] == '-') {
                                     numAUnOrdered += exprOrdered[operPosition-i];
                                     numbersFilled++;
                                     i = 1;
+                                    if (exprOrdered[operPosition-i] == '.'){
+                                        resDoubleUsed = true;
+                                    }
                                     for (int j = 1; j <= numAUnOrdered.length(); j++){
                                         numA += numAUnOrdered[numAUnOrdered.length()-j];
                                     }
@@ -285,6 +294,9 @@ int main()
                                 if (operPosition+i <= exprOrdered.length() && exprOrdered[operPosition+i] != '+' && exprOrdered[operPosition+i] != '-' && exprOrdered[operPosition+i] != '*' && exprOrdered[operPosition+i] != '/'){
                                     numB += exprOrdered[operPosition+i];
                                     tempValue = operPosition+i;
+                                    if (exprOrdered[operPosition+i] == '.'){
+                                        resDoubleUsed = true;
+                                    }
                                 }else {
                                     numbersFilled++;
                                     lastIteration = operPosition;
@@ -297,14 +309,26 @@ int main()
                 cout << numA + " A\n";
                 cout << numB + " B\n";
 
+                if (resDoubleUsed && resultDouble == 0){
+                    resultDouble = (double) result;
+                }
+
                 switch (oper){
                     case 1:
                         if (numB.length() > 0){
                             if (result == 0){
-                                result = stoi(numA) + stoi(numB);
+                                if (resDoubleUsed){
+                                    resultDouble += stod(numA) + stod(numB);
+                                }else {
+                                    result += stoi(numA) + stoi(numB);
+                                }
                             }else {
-                                cout << result << + " result\n";
-                                result = result + stoi(numB);
+                                cout << resultDouble << + " result\n";
+                                if (resDoubleUsed){
+                                    resultDouble += stod(numB);
+                                }else {
+                                    result = result + stoi(numB);
+                                }
                             }
                         }
 
@@ -313,39 +337,67 @@ int main()
                     case 2:
                         if (numB.length() > 0){
                             if (result == 0 && numOfIterations == 0){
-                                result = stoi(numA) - stoi(numB);
+                                if (resDoubleUsed){
+                                    resultDouble = stod(numA) - stod(numB);
+                                }else {
+                                    result = stoi(numA) - stoi(numB);
+                                }
                             }else {
-                                result = result - stoi(numB);
+                                cout << resultDouble << + " resultDoble\n";
+                                if (resDoubleUsed){
+                                    resultDouble -= stod(numB);
+                                }else {
+                                    result -= stoi(numB);
+                                }
                             }
                         }
                         break;
 
                     case 3:
                         if (numA.length() > 0){
-                            int tempResult = 0;
+                            if (resDoubleUsed){
+                                double tempResult = 0;
+                                tempResult = stod(numA) * stod(numB);
+                                resultDouble += tempResult;
+                            }else {
+                                int tempResult = 0;
                                 tempResult = stoi(numA) * stoi(numB);
                                 result += tempResult;
+                            }
                         }else {
-                            result = result * stoi(numB);
+                            if (resDoubleUsed){
+                                resultDouble += (double) result * stod(numB);
+                            }else {
+                                result = result * stoi(numB);
+                            }
                         }
                         break;
 
                     case 4:
                         if (numA.length() > 0){
-                            int tempResult = 0;
-                            tempResult = stoi(numA) / stoi(numB);
-                            result += tempResult;
+                            double tempResult = 0;
+                            tempResult = stod(numA) / stod(numB);
+                            resultDouble += tempResult;
+                            resDoubleUsed = true;
                         }
                         break;
                 }
                 numOfIterations++;
-                cout << result << + " R\n";
+                if (resDoubleUsed){
+                    cout << resultDouble << + " R\n";
+                }else {
+                    cout << result << + " R\n";
+                }
 
             }
         }
 
         cout << " \n";
-        cout << result << + " \n\n";
+        if (resDoubleUsed){
+            cout << resultDouble << + " \n\n";
+        }else {
+            cout << result << + " \n\n";
+        }
     }
     while (expression != "exit" && expression != "quit");
 
