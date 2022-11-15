@@ -158,7 +158,7 @@ int main()
                         operators.push_back(1);
                     }
 
-                }else if (expression[i] == '-' && i != 0){
+                }else if (expression[i] == '-'){
                     string unOrderNums;
                     string tempValueLessI;
                     string tempValuePlusI;
@@ -375,6 +375,9 @@ int main()
 
                     case 4:
                         if (numA.length() > 0){
+                            if (!resDoubleUsed){
+                                resultDouble = (double) result;
+                            }
                             double tempResult = 0;
                             tempResult = stod(numA) / stod(numB);
                             resultDouble += tempResult;
